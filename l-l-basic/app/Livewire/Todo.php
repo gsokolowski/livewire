@@ -31,6 +31,23 @@ class Todo extends Component
         $this->todos = array_values($this->todos); 
     }
 
+    
+    // Lifecycle Hooks - mount method with default todos
+    public function mount()
+    {
+        $this->todos = [
+            'Buy groceries', 
+            'Finish project', 
+            'Call mom'
+        ];
+    }
+    // Lifecycle Hooks - updated method
+    public function updatedTodo($value) // you add Todo as second part of the method name
+    {
+        // just update the todo property
+        $this->todo = $value;
+    }
+
     // Method to render the component
     public function render()
     {

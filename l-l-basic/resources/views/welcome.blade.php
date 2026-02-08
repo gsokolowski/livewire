@@ -13,7 +13,8 @@
         <livewire:counter />
         <livewire:user-profile />
         <livewire:calculator />
-        <livewire:todo />
+        <!-- Replace <livewire:todo /> with direct include -->
+        @include('livewire.todo')
     </div>
     
     @livewireScripts
