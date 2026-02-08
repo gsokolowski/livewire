@@ -1,4 +1,4 @@
-<div class="max-w-md mx-auto p-6 bg-gray-100 rounded-lg">
+<div class="max-w-md mx-auto p-6 bg-green-100 rounded-lg">
     <h1 class="text-2xl font-bold mb-4 text-center">Todo List</h1>
     
     <div class="space-y-4">
