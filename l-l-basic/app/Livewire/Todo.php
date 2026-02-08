@@ -12,20 +12,26 @@ class Todo extends Component
     // Array property with default value
     public $todos = [];
 
-    public function addTodo() // Remove the parameter
+    // Method to add a todo
+    public function addTodo()
     {
+        // Check if the todo is not empty
         if (!empty($this->todo)) {
-            $this->todos[] = $this->todo; // Use $this->todo property
+            $this->todos[] = $this->todo;
             $this->todo = ''; // Clear the input after adding
         }
     }
 
+    // Method to remove a todo
     public function removeTodo($index)
     {
-        unset($this->todos[$index]);
-        $this->todos = array_values($this->todos); // Re-index array
+        // Remove the todo from the array
+        unset($this->todos[$index]); 
+        // Re-index the array
+        $this->todos = array_values($this->todos); 
     }
 
+    // Method to render the component
     public function render()
     {
         return view('livewire.todo');
