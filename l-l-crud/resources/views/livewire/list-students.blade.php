@@ -36,6 +36,7 @@
                     <div class="mt-8 flex flex-col">
                         <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
                             <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                                <div class="mt-5">Links {{ $students->links() }}</div>
                                 <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg relative">
                                     <table class="min-w-full divide-y divide-gray-300">
                                         <thead class="bg-gray-50">
@@ -68,42 +69,52 @@
                                             </tr>
                                         </thead>
                                         <tbody class="divide-y divide-gray-200 bg-white">
-                                            <tr>
-                                                <td
-                                                    class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                                    1
-                                                </td>
-                                                <td
-                                                    class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                                    Some name
-                                                </td>
-                                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                    somemail@gmail.com
-                                                </td>
-                                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                    Class 1
-                                                </td>
-                                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                    Section A
-                                                </td>
-                                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                    2 days ago
-                                                </td>
-    
-                                                <td
-                                                    class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                                                    <a href="#" class="text-indigo-600 hover:text-indigo-900">
-                                                        Edit
-                                                    </a>
-                                                    <button class="ml-2 text-indigo-600 hover:text-indigo-900">
-                                                        Delete
-                                                    </button>
-                                                </td>
-                                            </tr>
+                                            @if($students->isEmpty())
+                                                <tr>
+                                                    <td colspan="7" class="px-3 py-4 text-sm text-gray-500 text-center">
+                                                        No students found.
+                                                    </td>
+                                                </tr>
+                                            @else
+                                                @foreach($students as $student)
+                                                    <tr>
+                                                        <td
+                                                            class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                                            {{ $student->id }}
+                                                        </td>
+                                                        <td
+                                                            class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                                            {{ $student->name }}
+                                                        </td>
+                                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                            {{ $student->email }}
+                                                        </td>
+                                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                            {{ $student->directory->name ?? 'N/A' }}
+                                                        </td>
+                                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                            {{ $student->section->name ?? 'N/A' }}
+                                                        </td>
+                                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                            {{ $student->created_at->diffForHumans() }}
+                                                        </td>
+                                        
+                                                        <td
+                                                            class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                                                            <a href="#" class="text-indigo-600 hover:text-indigo-900">
+                                                                Edit
+                                                            </a>
+                                                            <button class="ml-2 text-indigo-600 hover:text-indigo-900">
+                                                                Delete
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            @endif
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="mt-5">Links</div>
+                                <div class="mt-5">Links {{ $students->links() }}</div>
                             </div>
                         </div>
                     </div>
