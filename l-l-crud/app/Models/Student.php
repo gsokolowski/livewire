@@ -11,6 +11,14 @@ class Student extends Model
     /** @use HasFactory<\Database\Factories\StudentFactory> */
     use HasFactory;
 
+    // ✅ ADDED: Mass assignable fields
+    protected $fillable = [
+        'name',
+        'email',
+        'directory_id',
+        'section_id',
+    ];
+
     // ✅ ADDED: Relationship - Student belongs to Directory
     public function directory(): BelongsTo
     {

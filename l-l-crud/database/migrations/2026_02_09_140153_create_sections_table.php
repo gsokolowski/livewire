@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             // ✅ ADDED: Foreign key to directories table
             $table->foreignId('directory_id')->constrained()->onDelete('cascade');
+            // ✅ ADDED: Section name field
+            $table->string('name');
             $table->timestamps();
         });
     }

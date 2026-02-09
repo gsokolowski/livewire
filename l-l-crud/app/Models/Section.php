@@ -12,6 +12,12 @@ class Section extends Model
     /** @use HasFactory<\Database\Factories\SectionFactory> */
     use HasFactory;
 
+    // ✅ ADDED: Mass assignable fields
+    protected $fillable = [
+        'name',
+        'directory_id',
+    ];
+
     // ✅ ADDED: Relationship - Section belongs to Directory
     public function directory(): BelongsTo
     {

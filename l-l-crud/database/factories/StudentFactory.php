@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Directory;
+use App\Models\Section;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,8 +18,12 @@ class StudentFactory extends Factory
      */
     public function definition(): array
     {
+        // ✅ ADDED: Generate fake name and email data
         return [
-            //
+            'name' => fake()->name(),
+            'email' => fake()->unique()->safeEmail(),
+            'directory_id' => Directory::factory(),
+            'section_id' => Section::factory(),
         ];
     }
 }

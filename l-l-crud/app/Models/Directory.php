@@ -11,6 +11,11 @@ class Directory extends Model
     /** @use HasFactory<\Database\Factories\DirectoryFactory> */
     use HasFactory;
 
+    // ✅ ADDED: Mass assignable fields
+    protected $fillable = [
+        'name',
+    ];
+
     // ✅ ADDED: Relationship - Directory has many Sections
     public function sections(): HasMany
     {

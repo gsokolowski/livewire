@@ -16,8 +16,9 @@ class DirectoryFactory extends Factory
      */
     public function definition(): array
     {
+        // ✅ ADDED: Generate fake directory name
         return [
-            //
+            'name' => fake()->words(2, true), // Generates 2 words like "Science Department"
         ];
     }
 }

@@ -17,6 +17,10 @@ return new class extends Migration
             $table->foreignId('directory_id')->constrained()->onDelete('cascade');
             // ✅ ADDED: Foreign key to sections table
             $table->foreignId('section_id')->constrained()->onDelete('cascade');
+            // ✅ ADDED: Student name field
+            $table->string('name');
+            // ✅ ADDED: Student email field
+            $table->string('email');
             $table->timestamps();
         });
     }

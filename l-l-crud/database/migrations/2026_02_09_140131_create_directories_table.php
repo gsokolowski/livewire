@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('directories', function (Blueprint $table) {
             $table->id();
+            // ✅ ADDED: Directory name field
+            $table->string('name');
             $table->timestamps();
         });
     }

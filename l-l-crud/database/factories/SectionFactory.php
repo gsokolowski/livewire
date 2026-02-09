@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Directory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,8 +17,10 @@ class SectionFactory extends Factory
      */
     public function definition(): array
     {
+        // ✅ ADDED: Generate fake section name and directory relationship
         return [
-            //
+            'name' => ' Section '.fake()->randomElement(['A', 'B']),
+            'directory_id' => Directory::factory(),
         ];
     }
 }
