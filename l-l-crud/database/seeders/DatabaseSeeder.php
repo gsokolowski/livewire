@@ -25,13 +25,20 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
 
-        // ✅ CHANGED: Create directories first and store them
-        $directories = Directory::factory(10)->create();
+        // ✅ CHANGED: Create directories with names "Class {id}"
+        $directories = collect();
+        for ($i = 1; $i <= 10; $i++) {
+            $directories->push(
+                Directory::create([
+                    'name' => "Class {$i}",
+                ])
+            );
+        }
 
-        // ✅ CHANGED: Create Section A and Section B for each directory
-        $sections = collect();
+        // ✅ CHANGED: Create Section A and Section B for each directory and store sections by directory
+        $sectionsByDirectory = collect();
         foreach ($directories as $directory) {
-            $sections = $sections->merge([
+            $directorySections = [
                 Section::create([
                     'name' => 'Section A',
                     'directory_id' => $directory->id,
@@ -40,13 +47,22 @@ class DatabaseSeeder extends Seeder
                     'name' => 'Section B',
                     'directory_id' => $directory->id,
                 ]),
-            ]);
+            ];
+            $sectionsByDirectory[$directory->id] = collect($directorySections);
         }
 
-        // ✅ CHANGED: Create students using existing directories and sections
-        Student::factory(50)->create([
-            'directory_id' => fn() => $directories->random()->id,
-            'section_id' => fn() => $sections->random()->id,
-        ]);
+        // ✅ CHANGED: Create students ensuring section belongs to the selected directory
+        Student::factory(100)->create(function () use ($directories, $sectionsByDirectory) {
+            // Pick a random directory
+            $directory = $directories->random();
+            
+            // Pick a random section from that directory's sections
+            $section = $sectionsByDirectory[$directory->id]->random();
+            
+            return [
+                'directory_id' => $directory->id,
+                'section_id' => $section->id,
+            ];
+        });
     }
 }
