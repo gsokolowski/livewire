@@ -10,10 +10,10 @@ use Livewire\WithPagination;
 class ListStudents extends Component
 {
     use WithPagination;
-
     // you need to add the layout to the component to use breeze layout
     #[Layout('layouts.app')] // layouts/app.blade.php
 
+    
     
     public function render()
     {
