@@ -85,13 +85,12 @@
                                 Add Student
                             </a>
                         </div>
-                    </div>
-    
+                    </div>  
                     <div class="flex flex-col justify-between sm:flex-row mt-6">
                         <div class="relative text-sm text-gray-800 col-span-3">
                             <div
                                 class="absolute pl-2 left-0 top-0 bottom-0 flex items-center pointer-events-none text-gray-500">
-                                <x-magnifying-glass />
+                                <x-heroicon-o-magnifying-glass class="w-5 h-5" />
                             </div>
          
                             <input type="text" placeholder="Search students data..." id="search"
