@@ -10,11 +10,8 @@
 </head>
 <body class="min-h-screen flex items-center justify-center">
     <div class="container mx-auto text-center">
-        <livewire:counter />
-        <livewire:user-profile />
-        <livewire:calculator />
-        <!-- Replace <livewire:todo /> with direct include -->
-        @include('livewire.todo')
+    Head to login page to get started
+    <a href="{{ route('login') }}" class="text-blue-500">Login</a>
     </div>
     
     @livewireScripts
