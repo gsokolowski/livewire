@@ -72,7 +72,13 @@ class UpdateStudent extends Component
             'section_id' => $this->section_id,
         ]);
 
-        return redirect()->route('students.index');
+        session()->flash('toast', [
+            'type' => 'success',
+            'message' => 'Student updated successfully'
+        ]);
+        
+        return $this->redirect(route('students.index'), navigate: true);
+
     }
 
     public function render()

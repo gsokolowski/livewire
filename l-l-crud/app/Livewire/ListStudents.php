@@ -13,6 +13,15 @@ class ListStudents extends Component
     // you need to add the layout to the component to use breeze layout
     #[Layout('layouts.app')] // layouts/app.blade.php
 
+    // ✅ ADDED: Check for session flash and dispatch toast on mount
+    public function mount()
+    {
+        if (session()->has('toast')) {
+            $toast = session('toast');
+            $this->dispatch('toast', type: $toast['type'], message: $toast['message']);
+        }
+    }
+
     // delete student method
     public function deleteStudent($id)
     {

@@ -1,4 +1,41 @@
 <div>
+    <script>
+        document.addEventListener('livewire:init', () => {
+            Livewire.on('toast', (event) => {
+                const type = event.type || 'success';
+                const message = event.message || 'Operation completed';
+                
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    }
+                });
+                
+                switch(type) {
+                    case 'success':
+                        Toast.fire({ icon: 'success', title: message });
+                        break;
+                    case 'error':
+                        Toast.fire({ icon: 'error', title: message });
+                        break;
+                    case 'warning':
+                        Toast.fire({ icon: 'warning', title: message });
+                        break;
+                    case 'info':
+                        Toast.fire({ icon: 'info', title: message });
+                        break;
+                    default:
+                        Toast.fire({ icon: 'success', title: message });
+                }
+            });
+        });
+    </script>
     <div class="py-12">
         <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
             <div class="lg:grid lg:grid-cols-12 lg:gap-x-5">
@@ -75,7 +112,7 @@
                                 </div>
                             </div>
                             <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                                <a href="{{ route('students.index') }}"
+                                <a wire:navigate href="{{ route('students.index') }}"
                                     class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-4">
                                     Cancel
                                 </a>

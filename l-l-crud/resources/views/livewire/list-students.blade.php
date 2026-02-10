@@ -1,57 +1,51 @@
 <div>
+    @if(session('toast'))
     <script>
-        document.addEventListener('livewire:init', () => {
-            Livewire.on('toast', (event) => {
-                // ✅ CHANGED: Use SweetAlert2 for notifications
-                const type = event.type || 'success';
-                const message = event.message || 'Operation completed';
-                
+        // ✅ CHANGED: Use Livewire navigation event instead of DOMContentLoaded
+        document.addEventListener('livewire:navigated', () => {
+            const toast = @json(session('toast'));
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true
+            });
+            Toast.fire({ icon: toast.type, title: toast.message });
+        });
+        
+        // Also check on initial load (for non-navigated visits)
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                const toast = @json(session('toast'));
+                if (toast) {
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true
+                    });
+                    Toast.fire({ icon: toast.type, title: toast.message });
+                }
+            });
+        } else {
+            // Already loaded
+            const toast = @json(session('toast'));
+            if (toast) {
                 const Toast = Swal.mixin({
                     toast: true,
                     position: 'top-end',
                     showConfirmButton: false,
                     timer: 3000,
-                    timerProgressBar: true,
-                    didOpen: (toast) => {
-                        toast.onmouseenter = Swal.stopTimer;
-                        toast.onmouseleave = Swal.resumeTimer;
-                    }
+                    timerProgressBar: true
                 });
-                
-                switch(type) {
-                    case 'success':
-                        Toast.fire({
-                            icon: 'success',
-                            title: message
-                        });
-                        break;
-                    case 'error':
-                        Toast.fire({
-                            icon: 'error',
-                            title: message
-                        });
-                        break;
-                    case 'warning':
-                        Toast.fire({
-                            icon: 'warning',
-                            title: message
-                        });
-                        break;
-                    case 'info':
-                        Toast.fire({
-                            icon: 'info',
-                            title: message
-                        });
-                        break;
-                    default:
-                        Toast.fire({
-                            icon: 'success',
-                            title: message
-                        });
-                }
-            });
-        });
-        
+                Toast.fire({ icon: toast.type, title: toast.message });
+            }
+        }
+    </script>
+    @endif
+    <script>
         // ✅ ADDED: Confirmation dialog using SweetAlert2
         function confirmDelete(studentId, studentName) {
             Swal.fire({
@@ -86,7 +80,7 @@
                         </div>
     
                         <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-                            <a href="{{ route('students.create') }}"
+                            <a wire:navigate href="{{ route('students.create') }}"
                                 class="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto">
                                 Add Student
                             </a>

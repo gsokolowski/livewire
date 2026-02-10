@@ -40,8 +40,14 @@ class CreateStudent extends Component
             'directory_id' => $this->directory_id,
             'section_id' => $this->section_id,
         ]);
-
-        return redirect()->route('students.index');
+        
+        
+        session()->flash('toast', [
+            'type' => 'success',
+            'message' => 'Student created successfully'
+        ]);
+        
+        return $this->redirect(route('students.index'), navigate: true);
     }
     // when directory_id is updated, sections dropdown is updated
     public function updatedDirectoryId($value) // this is a livewire event requires wire:model.live directive in the form field
