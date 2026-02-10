@@ -1,4 +1,76 @@
 <div>
+    <script>
+        document.addEventListener('livewire:init', () => {
+            Livewire.on('toast', (event) => {
+                // ✅ CHANGED: Use SweetAlert2 for notifications
+                const type = event.type || 'success';
+                const message = event.message || 'Operation completed';
+                
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    }
+                });
+                
+                switch(type) {
+                    case 'success':
+                        Toast.fire({
+                            icon: 'success',
+                            title: message
+                        });
+                        break;
+                    case 'error':
+                        Toast.fire({
+                            icon: 'error',
+                            title: message
+                        });
+                        break;
+                    case 'warning':
+                        Toast.fire({
+                            icon: 'warning',
+                            title: message
+                        });
+                        break;
+                    case 'info':
+                        Toast.fire({
+                            icon: 'info',
+                            title: message
+                        });
+                        break;
+                    default:
+                        Toast.fire({
+                            icon: 'success',
+                            title: message
+                        });
+                }
+            });
+        });
+        
+        // ✅ ADDED: Confirmation dialog using SweetAlert2
+        function confirmDelete(studentId, studentName) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: `Are you sure you want to delete student: ${studentName}?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Call Livewire method to delete
+                    @this.deleteStudent(studentId);
+                }
+            });
+        }
+    </script>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -104,7 +176,9 @@
                                                             <a href="{{ route('students.update', $student->id) }}" class="text-indigo-600 hover:text-indigo-900">
                                                                 Edit
                                                             </a>
-                                                            <button class="ml-2 text-indigo-600 hover:text-indigo-900">
+                                                            <button 
+                                                                onclick="confirmDelete({{ $student->id }}, '{{ $student->name }}')" 
+                                                                class="ml-2 text-indigo-600 hover:text-indigo-900">
                                                                 Delete
                                                             </button>
                                                         </td>
