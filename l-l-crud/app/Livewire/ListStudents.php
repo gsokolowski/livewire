@@ -30,6 +30,12 @@ class ListStudents extends Component
         
     }
 
+    // Dummy method to trigger wire:loading on initial page load
+    public function spinnerOnAjaxRequest()
+    {
+        // Do nothing, just trigger the Ajaxrequest to show loading spinner
+    }
+
     public function render()
     {
         // ✅ CHANGED: Load students with relationships for better performance

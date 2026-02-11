@@ -125,27 +125,7 @@
                                             <p class="text-sm text-gray-700">Loading...</p>
                                         </div>
                                     </div>
-                                    
-                                    <script>
-                                        // Show spinner on initial load
-                                        const tableLoading = document.getElementById('table-loading');
-                                        if (tableLoading) {
-                                            tableLoading.style.display = 'flex';
-                                            
-                                            // Hide when Livewire is ready
-                                            document.addEventListener('livewire:init', () => {
-                                                tableLoading.style.display = 'none';
-                                            });
-                                            
-                                            // Also handle if Livewire is already initialized
-                                            if (window.Livewire) {
-                                                setTimeout(() => {
-                                                    tableLoading.style.display = 'none';
-                                                }, 100);
-                                            }
-                                        }
-                                    </script>
-
+                                    <div wire:init="spinnerOnAjaxRequest"></div>
                                     <table class="min-w-full divide-y divide-gray-300">
                                         <thead class="bg-gray-50">
                                             <tr>
