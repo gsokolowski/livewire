@@ -59,8 +59,22 @@
                 cancelButtonText: 'Cancel'
             }).then((result) => {
                 if (result.isConfirmed) {
+                    // Show loading state for this specific button
+                    const deleteText = document.getElementById('delete-text-' + studentId);
+                    const deletingText = document.getElementById('deleting-text-' + studentId);
+                    if (deleteText && deletingText) {
+                        deleteText.style.display = 'none';
+                        deletingText.style.display = 'inline-flex';
+                    }
+                    
                     // Call Livewire method to delete
-                    @this.deleteStudent(studentId);
+                    @this.deleteStudent(studentId).then(() => {
+                        // Hide loading state after deletion
+                        if (deleteText && deletingText) {
+                            deleteText.style.display = 'inline';
+                            deletingText.style.display = 'none';
+                        }
+                    });
                 }
             });
         }
@@ -101,8 +115,37 @@
                     <div class="mt-8 flex flex-col">
                         <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
                             <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                                <!-- pagination links -->
                                 <div class="mt-5">Links {{ $students->links() }}</div>
                                 <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg relative">
+                                    <!-- ✅ ADDED: Loading indicator for pagination in table area -->
+                                    <div id="table-loading" wire:loading class="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
+                                        <div class="flex flex-col items-center">
+                                            <x-heroicon-o-arrow-path class="w-8 h-8 text-indigo-600 animate-spin mb-2" />
+                                            <p class="text-sm text-gray-700">Loading...</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <script>
+                                        // Show spinner on initial load
+                                        const tableLoading = document.getElementById('table-loading');
+                                        if (tableLoading) {
+                                            tableLoading.style.display = 'flex';
+                                            
+                                            // Hide when Livewire is ready
+                                            document.addEventListener('livewire:init', () => {
+                                                tableLoading.style.display = 'none';
+                                            });
+                                            
+                                            // Also handle if Livewire is already initialized
+                                            if (window.Livewire) {
+                                                setTimeout(() => {
+                                                    tableLoading.style.display = 'none';
+                                                }, 100);
+                                            }
+                                        }
+                                    </script>
+
                                     <table class="min-w-full divide-y divide-gray-300">
                                         <thead class="bg-gray-50">
                                             <tr>
@@ -170,10 +213,11 @@
                                                                 Edit
                                                             </a>
                                                             <button 
+                                                                id="delete-btn-{{ $student->id }}"
                                                                 onclick="confirmDelete({{ $student->id }}, '{{ $student->name }}')" 
                                                                 class="ml-2 text-indigo-600 hover:text-indigo-900">
-                                                                <span wire:loading.remove wire:target="deleteStudent">Delete</span>
-                                                                <span wire:loading wire:target="deleteStudent" class="flex items-center">
+                                                                <span id="delete-text-{{ $student->id }}">Delete</span>
+                                                                <span id="deleting-text-{{ $student->id }}" style="display: none;" class="flex items-center">
                                                                     Deleting...
                                                                 </span>
                                                             </button>
