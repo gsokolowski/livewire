@@ -125,7 +125,8 @@
                                             <p class="text-sm text-gray-700">Loading...</p>
                                         </div>
                                     </div>
-                                    <div wire:init="spinnerOnAjaxRequest"></div>
+                                    <!-- call dummy Ajax request to show loading spinner on initial page load -->
+                                    <div wire:init="dummyAjaxRequest"></div>
                                     <table class="min-w-full divide-y divide-gray-300">
                                         <thead class="bg-gray-50">
                                             <tr>

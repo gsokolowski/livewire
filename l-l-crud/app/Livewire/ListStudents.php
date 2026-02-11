@@ -31,7 +31,7 @@ class ListStudents extends Component
     }
 
     // Dummy method to trigger wire:loading on initial page load
-    public function spinnerOnAjaxRequest()
+    public function dummyAjaxRequest()
     {
         // Do nothing, just trigger the Ajaxrequest to show loading spinner
     }
