@@ -172,7 +172,10 @@
                                                             <button 
                                                                 onclick="confirmDelete({{ $student->id }}, '{{ $student->name }}')" 
                                                                 class="ml-2 text-indigo-600 hover:text-indigo-900">
-                                                                Delete
+                                                                <span wire:loading.remove wire:target="deleteStudent">Delete</span>
+                                                                <span wire:loading wire:target="deleteStudent" class="flex items-center">
+                                                                    Deleting...
+                                                                </span>
                                                             </button>
                                                         </td>
                                                     </tr>
