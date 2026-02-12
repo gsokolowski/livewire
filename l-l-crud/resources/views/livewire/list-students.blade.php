@@ -107,7 +107,7 @@
                                 <x-heroicon-o-magnifying-glass class="w-5 h-5" />
                             </div>
          
-                            <input type="text" placeholder="Search students data..." id="search"
+                            <input type="text" placeholder="Search students data..." id="search" wire:model.live.debounce.500ms="search"
                                 class="block rounded-lg border-0 py-2 pl-10 text-gray-900 ring-1 ring-inset ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                         </div>
                     </div>
@@ -125,8 +125,6 @@
                                             <p class="text-sm text-gray-700">Loading...</p>
                                         </div>
                                     </div>
-                                    <!-- call dummy Ajax request to show loading spinner on initial page load -->
-                                    <div wire:init="dummyAjaxRequest"></div>
                                     <table class="min-w-full divide-y divide-gray-300">
                                         <thead class="bg-gray-50">
                                             <tr>

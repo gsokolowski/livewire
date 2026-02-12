@@ -13,7 +13,16 @@ class ListStudents extends Component
     // you need to add the layout to the component to use breeze layout
     #[Layout('layouts.app')] // layouts/app.blade.php
 
-    // ✅ ADDED: Check for session flash and dispatch toast on mount
+    // property for search input
+    public $search = ''; // wire:model.live="search" in the input field
+
+    // livewire hook method - Automatically called when $search changes 
+    public function updatedSearch()
+    {
+        $this->resetPage(); // Reset pagination when search input is changed
+    }
+
+    // check for session flash and dispatch toast on mount
     public function mount()
     {
         if (session()->has('toast')) {
@@ -30,16 +39,22 @@ class ListStudents extends Component
         
     }
 
-    // Dummy method to trigger wire:loading on initial page load
-    public function dummyAjaxRequest()
-    {
-        // Do nothing, just trigger the Ajaxrequest to show loading spinner
-    }
-
     public function render()
     {
-        // ✅ CHANGED: Load students with relationships for better performance
-        $students = Student::with(['directory', 'section'])->orderBy('id', 'desc')->paginate(10);
+        // Load students with relationships, search filter, order by desc, and pagination
+        $students = Student::with(['directory', 'section'])
+            ->when($this->search, function ($query) {
+                $query->where('name', 'like', '%' . $this->search . '%')
+                    ->orWhere('email', 'like', '%' . $this->search . '%')
+                    ->orWhereHas('directory', function ($query) {
+                        $query->where('name', 'like', '%' . $this->search . '%');
+                    })
+                    ->orWhereHas('section', function ($query) {
+                        $query->where('name', 'like', '%' . $this->search . '%');
+                    });
+            })
+            ->orderBy('id', 'desc')
+            ->paginate(10);
 
         return view('livewire.list-students', [
             'students' => $students,
