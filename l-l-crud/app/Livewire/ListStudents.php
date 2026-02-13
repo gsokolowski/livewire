@@ -16,6 +16,10 @@ class ListStudents extends Component
     // property for search input
     public $search = ''; // wire:model.live="search" in the input field
 
+    // properties for sorting
+    public $sortColumn = 'id'; // Current column being sorted
+    public $sortDirection = 'desc'; // Current sort direction ('asc' or 'desc')
+
     // livewire hook method - Automatically called when $search changes 
     public function updatedSearch()
     {
@@ -40,9 +44,17 @@ class ListStudents extends Component
         
     }
 
+    // sort by column method
+    public function sortByColumn($column, $direction)
+    {
+        $this->sortColumn = $column;
+        $this->sortDirection = $direction;
+        $this->resetPage(); // Reset pagination when sorting changes
+    }
+
     public function render()
     {
-        // Load students with relationships, search filter, order by desc, and pagination
+        // Load students with relationships, search filter, sorting, and pagination
         $students = Student::with(['directory', 'section'])
             ->when($this->search, function ($query) {
                 $query->where('name', 'like', '%' . $this->search . '%')
@@ -54,7 +66,7 @@ class ListStudents extends Component
                         $query->where('name', 'like', '%' . $this->search . '%');
                     });
             })
-            ->orderBy('id', 'desc')
+            ->orderBy($this->sortColumn, $this->sortDirection)
             ->paginate(10);
 
         return view('livewire.list-students', [

@@ -130,15 +130,45 @@
                                             <tr>
                                                 <th scope="col"
                                                     class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
-                                                    ID
+                                                    <div class="flex items-center gap-1 cursor-pointer">
+                                                        <button wire:click="sortByColumn('id', 'asc')" 
+                                                            class="p-0.5 rounded text-gray-700">
+                                                            <x-heroicon-o-chevron-up class="w-3 h-3" />
+                                                        </button>
+                                                        <span>ID</span>
+                                                        <button wire:click="sortByColumn('id', 'desc')" 
+                                                            class="p-0.5 rounded text-gray-700">
+                                                            <x-heroicon-o-chevron-down class="w-3 h-3" />
+                                                        </button>
+                                                    </div>
                                                 </th>
                                                 <th scope="col"
                                                     class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
-                                                    Name
+                                                    <div class="flex items-center gap-1 cursor-pointer">
+                                                        <button wire:click="sortByColumn('name', 'asc')" 
+                                                            class="p-0.5 rounded text-gray-700">
+                                                            <x-heroicon-o-chevron-up class="w-3 h-3" />
+                                                        </button>
+                                                        <span>Name</span>
+                                                        <button wire:click="sortByColumn('name', 'desc')" 
+                                                            class="p-0.5 rounded text-gray-700">
+                                                            <x-heroicon-o-chevron-down class="w-3 h-3" />
+                                                        </button>
+                                                    </div>
                                                 </th>
                                                 <th scope="col"
                                                     class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
-                                                    Email
+                                                    <div class="flex items-center gap-1 cursor-pointer">
+                                                        <button wire:click="sortByColumn('email', 'asc')" 
+                                                            class="p-0.5 rounded text-gray-700">
+                                                            <x-heroicon-o-chevron-up class="w-3 h-3" />
+                                                        </button>
+                                                        <span>Email</span>
+                                                        <button wire:click="sortByColumn('email', 'desc')" 
+                                                            class="p-0.5 rounded text-gray-700">
+                                                            <x-heroicon-o-chevron-down class="w-3 h-3" />
+                                                        </button>
+                                                    </div>
                                                 </th>
                                                 <th scope="col"
                                                     class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
