@@ -142,6 +142,7 @@
                                     <span>selected</span>
                                 </div>
                                 <div class="flex items-center px-3">
+                                    <!-- vertical line -->
                                     <div class="h-[75%] w-[1px] bg-gray-300"></div>
                                 </div>                                
                                 <form id="bulk-delete-form" wire:submit="deleteStudents">
@@ -149,9 +150,20 @@
                                         onclick="confirmBulkDelete()"
                                         class="flex items-center gap-2 rounded-lg border px-3 py-1.5 bg-white font-medium text-md text-gray-700 hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-75">
                                         <x-heroicon-o-trash class="w-5 h-5" />
-                                        Delete Students
+                                        <span wire:loading.remove wire:target="deleteStudents">Delete Students</span>
+                                        <span wire:loading wire:target="deleteStudents" class="flex items-center">
+                                            Deleting...
+                                        </span>
                                     </button>
                                 </form>
+                                <button wire:click="exportSelected"
+                                    class="flex items-center gap-2 rounded-lg border px-3 py-1.5 bg-white font-medium text-md text-gray-700 hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-75">
+                                    <x-heroicon-o-arrow-down-tray class="w-5 h-5" />
+                                    <span wire:loading.remove wire:target="exportSelected">Export</span>
+                                    <span wire:loading wire:target="exportSelected" class="flex items-center">
+                                        Exporting...
+                                    </span>
+                                </button>
                             </div>
                         </div>
                     </div>

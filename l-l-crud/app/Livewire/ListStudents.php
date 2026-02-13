@@ -3,9 +3,11 @@
 namespace App\Livewire;
 
 use App\Models\Student;
+use App\Exports\StudentsExport;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ListStudents extends Component
 {
@@ -15,7 +17,7 @@ class ListStudents extends Component
 
     // property for search input
     public $search = ''; // wire:model.live="search" in the input field
-    public $selectedStudentIds = []; // wire:model.live="selectedStudentIds" in the checkbox field
+    public $selectedStudentIds = []; // wire:model="selectedStudentIds" in the checkbox field
 
     // properties for sorting
     public $sortColumn = 'id'; // Current column being sorted
@@ -54,6 +56,22 @@ class ListStudents extends Component
         $this->selectedStudentIds = [];
         // reset page
         $this->resetPage();
+    }
+
+    // export selected students to Excel
+    public function exportSelected()
+    {
+        if (empty($this->selectedStudentIds)) {
+            $this->dispatch('toast', type: 'warning', message: 'Please select students to export');
+            return;
+        }
+
+        $fileName = 'students-' . date('Y-m-d-His') . '.xlsx';
+        
+        return Excel::download(
+            new StudentsExport($this->selectedStudentIds),
+            $fileName
+        );
     }
 
     // sort by column method
