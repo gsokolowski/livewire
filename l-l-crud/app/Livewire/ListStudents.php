@@ -35,6 +35,7 @@ class ListStudents extends Component
     public function deleteStudent($id)
     {
         Student::find($id)->delete();
+        // dispatch toast notification not flash becouse you need to stay on the list students page
         $this->dispatch('toast', type: 'success', message: 'Student deleted successfully');
         
     }

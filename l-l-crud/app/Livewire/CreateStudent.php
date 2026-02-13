@@ -41,12 +41,12 @@ class CreateStudent extends Component
             'section_id' => $this->section_id,
         ]);
         
-        
+        // dispatch toast notification flash becouse you need to redirect to the list students page
         session()->flash('toast', [
             'type' => 'success',
             'message' => 'Student created successfully'
         ]);
-        
+
         return $this->redirect(route('students.index'), navigate: true);
     }
     // when directory_id is updated, sections dropdown is updated
