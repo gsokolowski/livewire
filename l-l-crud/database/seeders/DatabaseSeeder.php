@@ -52,7 +52,7 @@ class DatabaseSeeder extends Seeder
         }
 
         // ✅ CHANGED: Create students ensuring section belongs to the selected directory
-        Student::factory(100)->create(function () use ($directories, $sectionsByDirectory) {
+        Student::factory(1000)->create(function () use ($directories, $sectionsByDirectory) {
             // Pick a random directory
             $directory = $directories->random();
             
