@@ -18,6 +18,7 @@ class ListStudents extends Component
     // property for search input
     public $search = ''; // wire:model.live="search" in the input field
     public $selectedStudentIds = []; // wire:model="selectedStudentIds" in the checkbox field
+    public $selectAllMode = false; // Track if all filtered students are selected
 
     // properties for sorting
     public $sortColumn = 'id'; // Current column being sorted
@@ -27,6 +28,22 @@ class ListStudents extends Component
     public function updatedSearch()
     {
         $this->resetPage(); // Reset pagination when search input is changed
+        // Reset select all mode when search changes
+        $this->selectAllMode = false;
+    }
+
+    // livewire hook method - Automatically called when $selectedStudentIds changes
+    public function updatedSelectedStudentIds()
+    {
+        // Get all filtered student IDs
+        $allFilteredIds = $this->getFilteredQuery()->pluck('id')->toArray();
+        
+        // Check if all filtered students are selected
+        $allSelected = !empty($allFilteredIds) && 
+                       count($allFilteredIds) === count($this->selectedStudentIds) &&
+                       empty(array_diff($allFilteredIds, $this->selectedStudentIds));
+        
+        $this->selectAllMode = $allSelected;
     }
 
     // check for session flash and dispatch toast on mount
@@ -54,6 +71,8 @@ class ListStudents extends Component
         $this->dispatch('toast', type: 'success', message: 'Students deleted successfully');
         // reset selected student ids to ensure checkbox state updates
         $this->selectedStudentIds = [];
+        // reset select all mode
+        $this->selectAllMode = false;
         // reset page
         $this->resetPage();
     }
@@ -82,11 +101,10 @@ class ListStudents extends Component
         $this->resetPage(); // Reset pagination when sorting changes
     }
 
-    // toggle select all checkboxes
-    public function toggleSelectAll()
+    // Helper method to get filtered query (without pagination)
+    protected function getFilteredQuery()
     {
-        // Get current page students
-        $students = Student::with(['directory', 'section'])
+        return Student::with(['directory', 'section'])
             ->when($this->search, function ($query) {
                 $query->where('name', 'like', '%' . $this->search . '%')
                     ->orWhere('email', 'like', '%' . $this->search . '%')
@@ -97,8 +115,35 @@ class ListStudents extends Component
                         $query->where('name', 'like', '%' . $this->search . '%');
                     });
             })
-            ->orderBy($this->sortColumn, $this->sortDirection)
-            ->paginate(10);
+            ->orderBy($this->sortColumn, $this->sortDirection);
+    }
+
+    // select all filtered students across all pages
+    public function selectAllFiltered()
+    {
+        $allFilteredIds = $this->getFilteredQuery()->pluck('id')->toArray();
+        $this->selectedStudentIds = $allFilteredIds;
+        $this->selectAllMode = true;
+    }
+
+    // deselect all students
+    public function deselectAll()
+    {
+        $this->selectedStudentIds = [];
+        $this->selectAllMode = false;
+    }
+
+    // toggle select all checkboxes (current page only)
+    public function toggleSelectAll()
+    {
+        // If in select all mode, deselect all
+        if ($this->selectAllMode) {
+            $this->deselectAll();
+            return;
+        }
+
+        // Get current page students
+        $students = $this->getFilteredQuery()->paginate(10);
         
         $currentPageIds = $students->pluck('id')->toArray();
         
@@ -117,22 +162,15 @@ class ListStudents extends Component
     public function render()
     {
         // Load students with relationships, search filter, sorting, and pagination
-        $students = Student::with(['directory', 'section'])
-            ->when($this->search, function ($query) {
-                $query->where('name', 'like', '%' . $this->search . '%')
-                    ->orWhere('email', 'like', '%' . $this->search . '%')
-                    ->orWhereHas('directory', function ($query) {
-                        $query->where('name', 'like', '%' . $this->search . '%');
-                    })
-                    ->orWhereHas('section', function ($query) {
-                        $query->where('name', 'like', '%' . $this->search . '%');
-                    });
-            })
-            ->orderBy($this->sortColumn, $this->sortDirection)
-            ->paginate(10);
+        $students = $this->getFilteredQuery()->paginate(10);
+
+        // Get total count of filtered students (for comparison)
+        $totalFilteredCount = $this->getFilteredQuery()->count();
 
         return view('livewire.list-students', [
             'students' => $students,
+            'selectAllMode' => $this->selectAllMode,
+            'totalFilteredCount' => $totalFilteredCount,
         ]);
     }
 }

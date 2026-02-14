@@ -133,7 +133,7 @@
                             <input type="text" placeholder="Search students data..." id="search" wire:model.live.debounce.500ms="search"
                                 class="block rounded-lg border-0 py-2 pl-10 text-gray-900 ring-1 ring-inset ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                         </div>
-                        <div x-show="$wire.selectedStudentIds.length > 0"
+                        <div x-show="$wire.selectedStudentIds.length > 0 || $wire.selectAllMode"
                             class="flex flex-col sm:flex-row gap-2 sm:justify-end col-span-5">
                             <div class="flex flex-row-reverse justify-end sm:justify-start sm:flex-row gap-2">
                                 <div class="flex items-center gap-1 text-md text-gray-600">
@@ -144,7 +144,18 @@
                                 <div class="flex items-center px-3">
                                     <!-- vertical line -->
                                     <div class="h-[75%] w-[1px] bg-gray-300"></div>
-                                </div>                                
+                                </div>
+                                @if($selectAllMode)
+                                    <button wire:click="deselectAll"
+                                        class="flex items-center gap-2 rounded-lg border px-3 py-1.5 bg-indigo-600 font-medium text-md text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-75">
+                                        <span>All Selected</span>
+                                    </button>
+                                @else
+                                    <button wire:click="selectAllFiltered"
+                                        class="flex items-center gap-2 rounded-lg border px-3 py-1.5 bg-white font-medium text-md text-gray-700 hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-75">
+                                        <span>Select All?</span>
+                                    </button>
+                                @endif
                                 <form id="bulk-delete-form" wire:submit="deleteStudents">
                                     <button type="button"
                                         onclick="confirmBulkDelete()"
@@ -185,9 +196,9 @@
                                                 <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                                                     <input type="checkbox" 
                                                         wire:click="toggleSelectAll"
-                                                        wire:key="select-all-{{ count($selectedStudentIds) }}-{{ $students->count() }}"
+                                                        wire:key="select-all-{{ count($selectedStudentIds) }}-{{ $students->count() }}-{{ $selectAllMode ? 'all' : 'page' }}"
                                                         class="form-checkbox h-4 w-4 text-indigo-600"
-                                                        @if(count($selectedStudentIds) === $students->count() && $students->count() > 0) checked @endif>
+                                                        @if($selectAllMode || (count($selectedStudentIds) === $students->count() && $students->count() > 0 && !$selectAllMode)) checked @endif>
                                                 </th>
                                                 <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                                                     <div class="flex items-center gap-1 cursor-pointer">
@@ -266,7 +277,10 @@
                                                 @foreach($students as $student)
                                                     <tr>
                                                         <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-900">
-                                                            <input type="checkbox" wire:model="selectedStudentIds" value="{{ $student->id }}" class="form-checkbox h-4 w-4 text-indigo-600">
+                                                            <input type="checkbox" 
+                                                                wire:model="selectedStudentIds" 
+                                                                value="{{ $student->id }}" 
+                                                                class="form-checkbox h-4 w-4 text-indigo-600">
                                                         </td>
                                                         <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-900">
                                                             {{ $student->id }}
