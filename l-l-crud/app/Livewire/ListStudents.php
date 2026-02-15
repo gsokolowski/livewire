@@ -8,6 +8,9 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
+use Livewire\Attributes\Lazy;
+
+#[Lazy]
 
 class ListStudents extends Component
 {
@@ -157,6 +160,12 @@ class ListStudents extends Component
             // Select all current page items (merge without duplicates)
             $this->selectedStudentIds = array_values(array_unique(array_merge($this->selectedStudentIds, $currentPageIds)));
         }
+    }
+
+    // placeholder method
+    public function placeholder()
+    {
+        return view('components.table-placeholder');
     }
 
     public function render()

@@ -42,6 +42,92 @@
         <!-- SweetAlert2 JS -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         
+        <!-- ✅ ADDED: Global JavaScript functions for Livewire components -->
+        <script>
+            // Helper function to find Livewire component instance
+            function getLivewireComponent() {
+                // Try to find component by wire:id attribute
+                const wireElement = document.querySelector('[wire\\:id]');
+                if (wireElement) {
+                    const wireId = wireElement.getAttribute('wire:id');
+                    return Livewire.find(wireId);
+                }
+                // Fallback: try to find any Livewire component
+                const allWireElements = document.querySelectorAll('[wire\\:id]');
+                if (allWireElements.length > 0) {
+                    const firstWireId = allWireElements[0].getAttribute('wire:id');
+                    return Livewire.find(firstWireId);
+                }
+                return null;
+            }
+
+            // Confirmation dialog using SweetAlert2
+            function confirmDelete(studentId, studentName) {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: `Are you sure you want to delete student: ${studentName}?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Show loading state for this specific button
+                        const deleteText = document.getElementById('delete-text-' + studentId);
+                        const deletingText = document.getElementById('deleting-text-' + studentId);
+                        if (deleteText && deletingText) {
+                            deleteText.style.display = 'none';
+                            deletingText.style.display = 'inline-flex';
+                        }
+                        
+                        // Find Livewire component and call delete method
+                        const component = getLivewireComponent();
+                        if (component) {
+                            component.deleteStudent(studentId).then(() => {
+                                // Hide loading state after deletion
+                                if (deleteText && deletingText) {
+                                    deleteText.style.display = 'inline';
+                                    deletingText.style.display = 'none';
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+
+            // Confirmation dialog for bulk delete using SweetAlert2
+            function confirmBulkDelete() {
+                const component = getLivewireComponent();
+                if (!component) {
+                    console.error('Livewire component not found');
+                    return;
+                }
+                
+                const selectedCount = component.selectedStudentIds ? component.selectedStudentIds.length : 0;
+                
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: `Are you sure you want to delete ${selectedCount} student(s)?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, delete them!',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Submit the form to trigger wire:submit="deleteStudents"
+                        const form = document.getElementById('bulk-delete-form');
+                        if (form) {
+                            form.requestSubmit();
+                        }
+                    }
+                });
+            }
+        </script>
+        
         <!-- ✅ ADDED: Global toast listener for all Livewire components -->
         <script>
             document.addEventListener('livewire:init', () => {

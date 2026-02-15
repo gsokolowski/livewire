@@ -45,64 +45,6 @@
         }
     </script>
     @endif
-    <script>
-        // ✅ ADDED: Confirmation dialog using SweetAlert2
-        function confirmDelete(studentId, studentName) {
-            Swal.fire({
-                title: 'Are you sure?',
-                text: `Are you sure you want to delete student: ${studentName}?`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'Cancel'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Show loading state for this specific button
-                    const deleteText = document.getElementById('delete-text-' + studentId);
-                    const deletingText = document.getElementById('deleting-text-' + studentId);
-                    if (deleteText && deletingText) {
-                        deleteText.style.display = 'none';
-                        deletingText.style.display = 'inline-flex';
-                    }
-                    
-                    // Call Livewire method to delete
-                    @this.deleteStudent(studentId).then(() => {
-                        // Hide loading state after deletion
-                        if (deleteText && deletingText) {
-                            deleteText.style.display = 'inline';
-                            deletingText.style.display = 'none';
-                        }
-                    });
-                }
-            });
-        }
-
-        // ✅ ADDED: Confirmation dialog for bulk delete using SweetAlert2
-        function confirmBulkDelete() {
-            const selectedCount = @this.selectedStudentIds.length;
-            
-            Swal.fire({
-                title: 'Are you sure?',
-                text: `Are you sure you want to delete ${selectedCount} student(s)?`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, delete them!',
-                cancelButtonText: 'Cancel'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Submit the form to trigger wire:submit="deleteStudents"
-                    const form = document.getElementById('bulk-delete-form');
-                    if (form) {
-                        form.requestSubmit();
-                    }
-                }
-            });
-        }
-    </script>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -263,7 +205,10 @@
                                                         </button>
                                                     </div>
                                                 </th>
-                                                <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6" />
+                                                <th scope="col"
+                                                    class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                                    Action                                                    
+                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody class="divide-y divide-gray-200 bg-white">
@@ -302,7 +247,7 @@
                                                         </td>
                                         
                                                         <td
-                                                            class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                                                            class="relative whitespace-nowrap py-4 pl-3 pr-4  text-sm font-medium sm:pr-6">
                                                             <a href="{{ route('students.update', $student->id) }}" class="text-indigo-600 hover:text-indigo-900">
                                                                 Edit
                                                             </a>
