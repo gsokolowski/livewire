@@ -52,8 +52,8 @@ class CreateStudent extends Component
     // when directory_id is updated, sections dropdown is updated
     public function updatedDirectoryId($value) // this is a livewire event requires wire:model.live directive in the form field
     {
-        // get sections for the selected directory
-        $this->sections = Section::where('directory_id', $value)->get();
+        // get sections for the selected directory with directory relationship eager loaded
+        $this->sections = Section::with('directory')->where('directory_id', $value)->get();
         // reset section_id to null to avoid duplicate sections
         $this->section_id = null;
         $this->reset('section_id');

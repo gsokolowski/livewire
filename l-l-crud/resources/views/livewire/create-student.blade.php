@@ -81,7 +81,7 @@
                                     <div class="col-span-6 sm:col-span-3">
                                         <label for="directory_id" class="block text-sm font-medium text-gray-700">Directory</label>
                                         <select id="directory_id" wire:model.live="directory_id"
-                                            class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('class_id') text-red-900 focus:ring-red-500 focus:border-red-500 border-red-300 @enderror">
+                                            class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('directory_id') text-red-900 focus:ring-red-500 focus:border-red-500 border-red-300 @enderror">
                                             <option value="">Select a Directory</option>
                                             @foreach($directories as $directory)
                                                 <option value="{{ $directory->id }}">{{ $directory->name }}</option>
