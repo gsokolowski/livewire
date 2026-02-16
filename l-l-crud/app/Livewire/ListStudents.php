@@ -162,7 +162,7 @@ class ListStudents extends Component
         }
     }
 
-    // placeholder method
+    // placeholder method for table placeholder lazy loading
     public function placeholder()
     {
         return view('components.table-placeholder');
