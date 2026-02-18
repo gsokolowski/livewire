@@ -6,9 +6,11 @@ use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Spatie\LivewireWizard\Components\StepComponent;
+use Usernotnull\Toast\Concerns\WireToast;
 
 class PublishStep extends StepComponent
 {
+    use WireToast;
     public string $title = 'Publish';
 
     public function getMetaData()
@@ -56,13 +58,13 @@ class PublishStep extends StepComponent
 
         // Handle additional images if needed (you might want to create a product_images table)
         // For now, we're only storing the main image
-
-        session()->flash('message', 'Product published successfully!');
         
-        // Redirect to a products list page or show page
-        // return redirect()->route('products.index');
-        // or
-        // return redirect()->route('products.show', $product);
+        // Show toast notification on next page after redirect
+        toast()
+            ->success('Product published successfully!')
+            ->pushOnNextPage();
+        
+        return redirect()->route('products.show', $product);
     }
 
     public function render()
