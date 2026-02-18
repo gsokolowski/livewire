@@ -21,5 +21,40 @@ class CreateProduct extends WizardComponent
         ];       
     }
 
-    // note: no need to render anything here, because the steps are rendered automatically
+    public function render()
+    {
+        $currentStepState = $this->getCurrentStepState();
+        $stepNames = $this->stepNames();
+        $currentStepName = $this->currentStepName;
+        
+        // Map step classes to labels
+        $stepClassLabels = [
+            MetaStep::class => 'Meta Data',
+            ImageStep::class => 'Upload Image',
+            PublishStep::class => 'Publish Product',
+        ];
+        
+        // Map step names (aliases) to labels
+        $stepLabels = [];
+        $registry = app(\Livewire\Mechanisms\ComponentRegistry::class);
+        foreach ($this->steps() as $stepClass) {
+            $stepName = $registry->getName($stepClass);
+            if ($stepName) {
+                $stepLabels[$stepName] = $stepClassLabels[$stepClass] ?? class_basename($stepClass);
+            }
+        }
+
+        return view('livewire.product.create.wizard', compact('currentStepState', 'stepNames', 'currentStepName', 'stepLabels'));
+    }
+
+    public function goToStep(string $stepName)
+    {
+        // Get current step state if we have a current step
+        $currentStepState = [];
+        if ($this->currentStepName) {
+            $currentStepState = $this->getCurrentStepState();
+        }
+        
+        $this->showStep($stepName, $currentStepState);
+    }
 }
