@@ -24,6 +24,10 @@ Route::middleware('auth')->group(function () {
     })->name('products.create');
 
     Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
+
+    Route::get('/files', function () {
+        return view('files.index');
+    })->name('files.index');
 });
 
 require __DIR__.'/auth.php';
