@@ -29,9 +29,9 @@ class CreateProduct extends WizardComponent
         
         // Map step classes to labels
         $stepClassLabels = [
-            MetaStep::class => 'Meta Data',
-            ImageStep::class => 'Upload Image',
-            PublishStep::class => 'Publish Product',
+            MetaStep::class => 'Meta Information',
+            ImageStep::class => 'Upload Product Image',
+            PublishStep::class => 'Review & Publish Product',
         ];
         
         // Map step names (aliases) to labels
