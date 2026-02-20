@@ -13,59 +13,75 @@ class FileUploader extends Component
 {
     use WithFileUploads;
 
-    #[Validate('required|mimes:jpeg,jpg,png,gif,webp,mp4,mov,avi,mkv|max:2048', 
-        message: [
-            'required' => 'Please select a file to upload.',
-            'mimes' => 'Only images (jpeg, jpg, png, gif, webp) and videos (mp4, mov, avi, mkv) are allowed.',
-            'max' => 'File is too big. Maximum file size is 2MB.',
-        ]
-    )]
-    public $file = null;
+    public $files = [];
     
     public $activeTab = 'all';
     public $uploadSuccess = false;
-
+    public $uploadedCount = 0;
 
     public function mount()
     {
-        $this->file = null;
+        $this->files = [];
         $this->uploadSuccess = false;
+        $this->uploadedCount = 0;
     }
 
-    // This is used to validate the file when it is uploaded livewire hook is triggered
-    public function updatedFile()
+    // This is used to validate the files when they are uploaded livewire hook is triggered
+    public function updatedFiles()
     {
-        // Reset upload success when a new file is selected
+        // Reset upload success when new files are selected
         $this->uploadSuccess = false;
-
+        $this->uploadedCount = 0;
     }
 
     public function saveFile()
     {
-        // Validate will automatically use the #[Validate] attributes
-        // If validation fails, Livewire will automatically display the error messages
-        // from the attribute messages via @error('file') directive
-        $this->validate();
-
-        // Determine file type
-        $type = $this->getFileType($this->file);
-        
-        // Store the file
-        $path = $this->file->store('files', 'public');
-        
-        // Create database record
-        File::create([
-            'user_id' => Auth::id(),
-            'name' => $this->file->getClientOriginalName(),
-            'type' => $type,
-            'path' => $path,
+        // Validate files array
+        $this->validate([
+            'files.*' => 'required|mimes:jpeg,jpg,png,gif,webp,mp4,mov,avi,mkv|max:2048',
+        ], [
+            'files.*.required' => 'Please select files to upload.',
+            'files.*.mimes' => 'Only images (jpeg, jpg, png, gif, webp) and videos (mp4, mov, avi, mkv) are allowed.',
+            'files.*.max' => 'File is too big. Maximum file size is 2MB.',
         ]);
+
+        $uploadedCount = 0;
+
+        // Loop through all files and save each one
+        foreach ($this->files as $file) {
+            // Determine file type
+            $type = $this->getFileType($file);
+            
+            // Store the file
+            $path = $file->store('files', 'public');
+            
+            // Create database record
+            File::create([
+                'user_id' => Auth::id(),
+                'name' => $file->getClientOriginalName(),
+                'type' => $type,
+                'path' => $path,
+            ]);
+            
+            $uploadedCount++;
+        }
         
-        // Set upload success flag
+        // Set upload success flag and count
         $this->uploadSuccess = true;
+        $this->uploadedCount = $uploadedCount;
         
-        // Clear the file after upload
-        $this->reset('file');
+        // Clear the files after upload
+        $this->reset('files');
+    }
+
+    public function removeFile($index)
+    {
+        // Remove file from array at specified index
+        if (isset($this->files[$index])) {
+            unset($this->files[$index]);
+            // Re-index array to maintain sequential keys
+            $this->files = array_values($this->files);
+        }
     }
 
     private function getFileType($file)

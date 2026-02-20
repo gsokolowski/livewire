@@ -5,7 +5,7 @@
         
         <div class="space-y-6">
             <div>
-                <x-input-label for="file-upload" :value="__('Select File')" />
+                <x-input-label for="file-upload" :value="__('Select Files')" />
                 <div 
                     x-data="{ 
                         isDragging: false,
@@ -18,9 +18,11 @@
                                 const input = document.getElementById('file-upload');
                                 // Clear first to ensure clean state
                                 input.value = '';
-                                // Set the file
+                                // Set all files
                                 const dataTransfer = new DataTransfer();
-                                dataTransfer.items.add(files[0]);
+                                files.forEach(file => {
+                                    dataTransfer.items.add(file);
+                                });
                                 input.files = dataTransfer.files;
                                 // Trigger input event first, then change event for Livewire
                                 input.dispatchEvent(new Event('input', { bubbles: true }));
@@ -52,18 +54,19 @@
                     <div class="mt-4">
                         <label for="file-upload" class="cursor-pointer">
                             <span class="mt-2 block text-sm font-medium text-gray-900">
-                                Drag and drop a file here, or
+                                Drag and drop files here, or
                             </span>
                             <span class="mt-1 block text-sm text-indigo-600 hover:text-indigo-500">
-                                click to select a file
+                                click to select files
                             </span>
                         </label>
                         <input 
                             id="file-upload" 
                             type="file" 
-                            wire:model="file"
+                            multiple
+                            wire:model="files"
                             wire:loading.attr="disabled"
-                            wire:target="file"
+                            wire:target="files"
                             accept="image/*,video/*"
                             class="mt-1 block w-full text-sm text-gray-500
                                 file:mr-4 file:py-2 file:px-4
@@ -75,37 +78,60 @@
                         />
                     </div>
                     <p class="mt-2 text-xs text-gray-500">
-                        Images (JPEG, PNG, GIF, WebP) and Videos (MP4, MOV, AVI, MKV) up to 2MB
+                        Images (JPEG, PNG, GIF, WebP) and Videos (MP4, MOV, AVI, MKV) up to 2MB each
                     </p>
                 </div>
                 {{-- Validation Errors --}}
-                <x-input-error class="mt-2" :messages="$errors->get('file')" />
+                @if ($errors->has('files.*'))
+                    <x-input-error class="mt-2" :messages="$errors->get('files.*')" />
+                @endif
+                @foreach ($errors->all() as $error)
+                    @if (str_contains($error, 'files'))
+                        <x-input-error class="mt-2" :messages="[$error]" />
+                    @endif
+                @endforeach
             </div>
 
-            {{-- Selected File Preview --}}
-            @if ($file)
+            {{-- Selected Files Preview --}}
+            @if (count($files) > 0)
                 <div class="mt-4">
-                    <p class="text-sm font-medium text-gray-700 mb-2">Selected file:</p>
-                    <div class="flex items-center justify-between p-2 bg-gray-50 rounded-md">
-                        <span class="text-sm text-gray-700">
-                            {{ $file->getClientOriginalName() }}
-                        </span>
-                        <span class="text-xs text-gray-500">
-                            {{ number_format($file->getSize() / 1024, 2) }} KB
-                        </span>
-                    </div>
-                    @if (str_starts_with($file->getMimeType(), 'image/'))
-                        <div class="mt-2">
-                            <div class="bg-gray-50 rounded-md p-2">
-                                <img src="{{ $file->temporaryUrl() }}" alt="Preview" class="h-32 w-auto object-cover rounded-md">
+                    <p class="text-sm font-medium text-gray-700 mb-2">Selected files ({{ count($files) }}):</p>
+                    <div class="space-y-2">
+                        @foreach ($files as $index => $file)
+                            <div class="flex items-center justify-between p-2 bg-gray-50 rounded-md">
+                                <div class="flex-1">
+                                    <span class="text-sm text-gray-700">
+                                        {{ $file->getClientOriginalName() }}
+                                    </span>
+                                    <span class="text-xs text-gray-500 ml-2">
+                                        ({{ number_format($file->getSize() / 1024, 2) }} KB)
+                                    </span>
+                                </div>
+                                <button 
+                                    type="button"
+                                    wire:click="removeFile({{ $index }})"
+                                    class="ml-2 text-red-600 hover:text-red-800"
+                                    title="Remove file"
+                                >
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
                             </div>
-                        </div>
-                    @endif
+                            @if (str_starts_with($file->getMimeType(), 'image/'))
+                                <div class="mt-1 mb-2">
+                                    <div class="bg-gray-50 rounded-md p-2">
+                                        <img src="{{ $file->temporaryUrl() }}" alt="Preview" class="h-32 w-auto object-cover rounded-md">
+                                    </div>
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
                 </div>
             @endif
 
-            {{-- Upload Button - Only show when file is selected --}}
-            @if ($file)
+            {{-- Upload Button - Only show when files are selected --}}
+            @if (count($files) > 0)
                 <div class="flex items-center justify-end mt-4">
                     <button 
                         type="button"
@@ -113,7 +139,7 @@
                         wire:loading.attr="disabled"
                         class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 disabled:opacity-100 disabled:cursor-not-allowed"
                     >
-                        <span wire:loading.remove wire:target="saveFile">Upload File</span>
+                        <span wire:loading.remove wire:target="saveFile">Upload Files ({{ count($files) }})</span>
                         <span wire:loading wire:target="saveFile" style="display: none;">Uploading...</span>
                     </button>
                 </div>
@@ -127,7 +153,7 @@
                 class="mt-4 hidden" 
             >
                 <div class="flex items-center justify-between mb-2">
-                    <span class="text-sm font-medium text-gray-700">Uploading file...</span>
+                    <span class="text-sm font-medium text-gray-700">Uploading {{ count($files) }} file(s)...</span>
                 </div>
                 <div class="w-full bg-gray-200 rounded-full h-2.5">
                     <div 
@@ -163,7 +189,7 @@
                             x-transition:leave-start="opacity-100"
                             x-transition:leave-end="opacity-0"
                         >
-                            File uploaded successfully!
+                            {{ $uploadedCount }} file(s) uploaded successfully!
                         </span>
                     </div>
                 </div>
