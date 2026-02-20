@@ -33,6 +33,7 @@
                 {{ $slot }}
             </main>
         </div>
+        <!-- livewireScriptsConfig handles Livewire initialization -->
         @livewireScriptConfig
     </body>
 </html>

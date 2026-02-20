@@ -3,8 +3,11 @@ import './bootstrap';
 import {Alpine, Livewire} from '../../vendor/livewire/livewire/dist/livewire.esm';
 import ToastComponent from '../../vendor/usernotnull/tall-toasts/resources/js/tall-toasts';
 
-// Register ToastComponent with Livewire's Alpine
+// Make Alpine available globally
+window.Alpine = Alpine;
+
+// Register ToastComponent with Alpine before Livewire starts
 Alpine.plugin(ToastComponent);
 
-// Start Livewire (which includes Alpine)
+// Start Livewire - this handles initialization
 Livewire.start();

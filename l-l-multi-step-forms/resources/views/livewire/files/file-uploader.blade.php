@@ -148,7 +148,7 @@
             {{-- Progress Bar - Only show when user clicks upload button and upload is in progress (after clicking Upload File) --}}
             <div 
                 wire:loading.class="block"
-                wire:loading.class.remove="hidden"
+                wire:loading.class.remove="hidden" 
                 wire:target="saveFile"
                 class="mt-4 hidden" 
             >
