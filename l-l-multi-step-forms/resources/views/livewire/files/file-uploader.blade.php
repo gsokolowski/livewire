@@ -75,9 +75,10 @@
                         />
                     </div>
                     <p class="mt-2 text-xs text-gray-500">
-                        Images (JPEG, PNG, GIF, WebP) and Videos (MP4, MOV, AVI, MKV) up to 10MB
+                        Images (JPEG, PNG, GIF, WebP) and Videos (MP4, MOV, AVI, MKV) up to 2MB
                     </p>
                 </div>
+                {{-- Validation Errors --}}
                 <x-input-error class="mt-2" :messages="$errors->get('file')" />
             </div>
 
@@ -167,16 +168,11 @@
                     </div>
                 </div>
             @endif
-
-        {{-- Validation Errors --}}
-        @error('file')
-            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-        @enderror
     </div>
 
     {{-- File List with Tabs --}}
     <div>
-        <h3 class="text-lg font-medium text-gray-900 mb-4">Your Files</h3>
+        <h3 class="text-lg font-medium text-gray-900 mb-4 mt-4">Your Files</h3>
         
         {{-- Tabs --}}
         <div class="border-b border-gray-200 mb-6">

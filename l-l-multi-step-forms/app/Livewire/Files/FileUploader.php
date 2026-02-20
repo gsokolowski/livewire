@@ -5,6 +5,7 @@ namespace App\Livewire\Files;
 use App\Models\File;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -12,18 +13,18 @@ class FileUploader extends Component
 {
     use WithFileUploads;
 
+    #[Validate('required|mimes:jpeg,jpg,png,gif,webp,mp4,mov,avi,mkv|max:2048', 
+        message: [
+            'required' => 'Please select a file to upload.',
+            'mimes' => 'Only images (jpeg, jpg, png, gif, webp) and videos (mp4, mov, avi, mkv) are allowed.',
+            'max' => 'File is too big. Maximum file size is 2MB.',
+        ]
+    )]
     public $file = null;
+    
     public $activeTab = 'all';
     public $uploadSuccess = false;
 
-    protected $rules = [
-        'file' => 'required|mimes:jpeg,jpg,png,gif,webp,mp4,mov,avi,mkv|max:10240',
-    ];
-
-    protected $messages = [
-        'file.mimes' => 'Only images (jpeg, jpg, png, gif, webp) and videos (mp4, mov, avi, mkv) are allowed.',
-        'file.max' => 'File must not exceed 10MB.',
-    ];
 
     public function mount()
     {
@@ -31,53 +32,40 @@ class FileUploader extends Component
         $this->uploadSuccess = false;
     }
 
+    // This is used to validate the file when it is uploaded livewire hook is triggered
     public function updatedFile()
     {
         // Reset upload success when a new file is selected
         $this->uploadSuccess = false;
+
     }
 
     public function saveFile()
     {
-        // Check if file exists first
-        if (!$this->file) {
-            session()->flash('error', 'No file selected.');
-            return;
-        }
+        // Validate will automatically use the #[Validate] attributes
+        // If validation fails, Livewire will automatically display the error messages
+        // from the attribute messages via @error('file') directive
+        $this->validate();
 
-        // Validate file
-        try {
-            $this->validate();
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            $this->reset('file');
-            throw $e;
-        }
-
-        try {
-            // Determine file type
-            $type = $this->getFileType($this->file);
-            
-            // Store the file
-            $path = $this->file->store('files', 'public');
-            
-            // Create database record
-            File::create([
-                'user_id' => Auth::id(),
-                'name' => $this->file->getClientOriginalName(),
-                'type' => $type,
-                'path' => $path,
-            ]);
-            
-            // Set upload success flag
-            $this->uploadSuccess = true;
-            
-            // Clear the file after upload
-            $this->reset('file');
-        } catch (\Exception $e) {
-            Log::error('File upload error: ' . $e->getMessage());
-            session()->flash('error', 'Failed to upload file: ' . $e->getMessage());
-            $this->reset('file');
-        }
+        // Determine file type
+        $type = $this->getFileType($this->file);
+        
+        // Store the file
+        $path = $this->file->store('files', 'public');
+        
+        // Create database record
+        File::create([
+            'user_id' => Auth::id(),
+            'name' => $this->file->getClientOriginalName(),
+            'type' => $type,
+            'path' => $path,
+        ]);
+        
+        // Set upload success flag
+        $this->uploadSuccess = true;
+        
+        // Clear the file after upload
+        $this->reset('file');
     }
 
     private function getFileType($file)
