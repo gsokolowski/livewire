@@ -113,6 +113,7 @@ class FileUploader extends Component
         $this->activeTab = $tab;
     }
 
+    // Get the user files in balde use $this->userFiles
     public function getUserFilesProperty()
     {
         $query = Auth::user()->files()->latest();
