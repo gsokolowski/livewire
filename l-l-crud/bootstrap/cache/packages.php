@@ -84,4 +84,29 @@
       0 => 'Termwind\\Laravel\\TermwindServiceProvider',
     ),
   ),
+  'spatie/laravel-collection-macros' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Spatie\\CollectionMacros\\CollectionMacroServiceProvider',
+    ),
+  ),
+  'spatie/laravel-livewire-wizard' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Spatie\\LivewireWizard\\WizardServiceProvider',
+    ),
+  ),
+  'usernotnull/tall-toasts' => 
+  array (
+    'aliases' => 
+    array (
+      'Toast' => 'ToastManager',
+    ),
+    'providers' => 
+    array (
+      0 => 'Usernotnull\\Toast\\ToastServiceProvider',
+    ),
+  ),
 );
