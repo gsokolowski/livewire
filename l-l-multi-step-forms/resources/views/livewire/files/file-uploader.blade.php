@@ -1,11 +1,8 @@
 <div>
     {{-- Upload Section --}}
     <div class="mb-8">
-        <h3 class="text-lg font-medium text-gray-900 mb-4">Upload Files</h3>
-        
         <div class="space-y-6">
             <div>
-                <x-input-label for="file-upload" :value="__('Select Files')" />
                 <div 
                     x-data="{ 
                         isDragging: false,
