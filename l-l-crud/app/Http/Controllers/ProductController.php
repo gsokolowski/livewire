@@ -23,6 +23,10 @@ class ProductController extends Controller
         ]);
     }
 
+    public function create(): View
+    {
+        return view('products.create');
+    }
     /**
      * Display the specified product.
      */

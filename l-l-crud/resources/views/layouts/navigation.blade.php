@@ -22,7 +22,7 @@
                         {{ __('Products') }}
                     </x-nav-link>
                     <x-nav-link :href="route('files.index')" :active="request()->routeIs('files.index')">
-                        {{ __('Files Uploader') }}
+                        {{ __('Files') }}
                     </x-nav-link>
                 </div>
             </div>

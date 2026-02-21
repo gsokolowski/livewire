@@ -19,16 +19,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
     Route::get('/students', ListStudents::class)->name('students.index');
     Route::get('/students/create', CreateStudent::class)->name('students.create');
     Route::get('/students/{student}/edit', UpdateStudent::class)->name('students.update');
 
     Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-    
-    Route::get('/products/create', function () {
-        return view('product.create');
-    })->name('products.create');
-    
+    Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
     Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
 
     Route::get('/files', function () {
