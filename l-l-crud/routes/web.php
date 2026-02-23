@@ -6,6 +6,8 @@ use App\Livewire\UpdateStudent;
 use App\Livewire\ListStudents;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\PostController;
+use App\Livewire\Posts\PostList;
 
 Route::get('/', function () {
     return view('welcome');
@@ -31,6 +33,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/files', function () {
         return view('files.index');
     })->name('files.index');
+
+    Route::get('/posts', PostList::class)->name('posts.index');
+    Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
 });
 
 require __DIR__.'/auth.php';
