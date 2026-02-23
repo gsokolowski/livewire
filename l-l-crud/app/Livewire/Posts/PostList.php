@@ -8,7 +8,7 @@ use Livewire\Component;
 
 class PostList extends Component
 {
-    #[Layout('layouts.app')]
+    #[Layout('layouts.app')] // load the layouts/app.blade.php file
 
     public int $page = 1;
 

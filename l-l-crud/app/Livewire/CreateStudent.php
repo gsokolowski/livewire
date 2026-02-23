@@ -11,7 +11,7 @@ use Livewire\WithValidation;
 
 class CreateStudent extends Component
 {
-    #[Layout('layouts.app')] // layouts/app.blade.php
+    #[Layout('layouts.app')] // load the layouts/app.blade.php file
 
     // properties bind with form fields
     public $name;
