@@ -79,9 +79,6 @@
             <x-responsive-nav-link :href="route('products.index')" :active="request()->routeIs('products.*')">
                 {{ __('Products') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('products.create')" :active="request()->routeIs('products.create')">
-                {{ __('Create Product') }}
-            </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('files.index')" :active="request()->routeIs('files.index')">
                 {{ __('Files') }}
             </x-responsive-nav-link>
