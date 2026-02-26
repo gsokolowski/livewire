@@ -94,7 +94,7 @@
             <x-responsive-nav-link :href="route('posts.index')" :active="request()->routeIs('posts.*')">
                 {{ __('Posts') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('rooms.show', 2)" :active="request()->routeIs('rooms.show')">
+            <x-responsive-nav-link :href="route('rooms.show', 'livewire')" :active="request()->routeIs('rooms.show')">
                 {{ __('Chat Room') }}
             </x-responsive-nav-link>
         </div>

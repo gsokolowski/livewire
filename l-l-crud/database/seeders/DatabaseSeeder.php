@@ -26,6 +26,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call(UserSeeder::class);
+        $this->call(RoomSeeder::class);
+        $this->call(MessageSeeder::class);
 
         // ✅ CHANGED: Create directories with names "Class {id}"
         $directories = collect();
