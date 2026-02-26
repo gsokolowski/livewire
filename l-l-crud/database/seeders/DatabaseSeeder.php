@@ -25,6 +25,8 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
 
+        $this->call(UserSeeder::class);
+
         // ✅ CHANGED: Create directories with names "Class {id}"
         $directories = collect();
         for ($i = 1; $i <= 10; $i++) {

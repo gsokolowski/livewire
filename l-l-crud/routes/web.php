@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Livewire\CreateStudent;
 use App\Livewire\UpdateStudent;
 use App\Livewire\ListStudents;
+use App\Livewire\Chat\Pages\RoomShow;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PostController;
@@ -36,6 +37,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/posts', PostList::class)->name('posts.index');
     Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
+    // url example: /rooms/2
+    Route::get('/rooms/{room:slug}', RoomShow::class)->name('rooms.show');
 });
 
 require __DIR__.'/auth.php';
