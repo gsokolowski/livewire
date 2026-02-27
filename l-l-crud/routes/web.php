@@ -37,7 +37,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/posts', PostList::class)->name('posts.index');
     Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
-    // url example: /rooms/2
+    
+    // url example: /rooms/livewire
     Route::get('/rooms/{room:slug}', RoomShow::class)->name('rooms.show');
 });
 
